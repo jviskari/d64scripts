@@ -6,6 +6,16 @@ import subprocess
 
 LOCATION_OF_YOUR_SCRIPTS = ''
 
+def browse():
+    with sg.FlexForm('Browse...') as form:
+        form_rows = [[sg.Text('D64 folder')],
+                     [sg.InputText(), sg.FileBrowse()],
+                     [sg.Submit(), sg.Cancel()]]
+        (button, (source_filename,)) = form.LayoutAndRead(form_rows)
+
+    print(button, source_filename)
+
+
 # Execute the command.  Will not see the output from the command until it completes.
 def execute_command_blocking(command, *args):
     expanded_args = []
@@ -36,7 +46,7 @@ def Launcher2():
     layout =  [
                 [sg.Listbox(values=namesonly, size=(30, 19), select_mode=sg.SELECT_MODE_EXTENDED, key='demolist'), sg.Output(size=(88, 20), font='Courier 10')],
               #  [sg.Checkbox('verbose', default=False, key='verbose')],
-                [sg.ReadFormButton('Write To Drive'), sg.ReadFormButton('Dump To Image'), sg.ReadFormButton('List'), sg.SimpleButton('EXIT')],
+                [sg.ReadFormButton('Write To Drive'), sg.ReadFormButton('Dump To Image'), sg.ReadFormButton('List'),sg.ReadFormButton('Browse'), sg.SimpleButton('EXIT')],
                 ]
 
     form.Layout(layout)
@@ -50,6 +60,8 @@ def Launcher2():
             print('Quickly launch your favorite programs using these shortcuts')
             print('Or  copy files to your github folder.  Or anything else you type on the command line')
             #Todo: execute commands
+        elif button is 'Browse':
+            browse()    
         elif button is 'Write To File':
             for index, file in enumerate(value['demolist']):
                 form.Refresh()          # make the print appear immediately
